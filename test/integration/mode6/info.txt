@@ -1,0 +1,18 @@
+# MODE6
+
+
+START:
+- Render widoku (index.tpl)
+- Wywołanie @include i załączenie innego widoku (view.tpl)
+- Bez podania domyślnego widoku dziedziczonego w BS
+- Bez podania tagów @extends i @no-extends w widokach
+
+RESULT:
+- Wyrenderowanie pliku index.tpl
+- W podanym miejscu wyrenderowanie pliku view.tpl
+
+
+
+------------------------------------------------------------------
+BS - Plik bootstrap, w którym konfigurujemy Atline.
+------------------------------------------------------------------

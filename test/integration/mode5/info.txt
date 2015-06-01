@@ -1,0 +1,17 @@
+# MODE5
+
+
+START:
+- Render widoku (index.tpl)
+- Instrukcja if w połączeniu z elseif oraz else
+- Przełącznikiem jest argument $switch w $_GET.
+
+RESULT:
+- Wyrenderowanie pliku index.tpl
+- W zależności od podanej wartości w adresie URL, pokaże się inny napis.
+
+
+
+------------------------------------------------------------------
+BS - Plik bootstrap, w którym konfigurujemy Atline.
+------------------------------------------------------------------

@@ -1,0 +1,24 @@
+# MODE8
+
+
+START:
+- Render widoku (index.tpl)
+- Podanie jako rodzica widoku parent.tpl w widoku index.tpl
+- Ustawienie głównego widoku w BS o nazwie base.tpl
+- Ustawienie sekcji o nazwie special w plikach: base.tpl, parent.tpl, index.tpl; z treścią: SECTION 'special': nazwa_widoku.tpl
+- Ustawienie sekcji o nazwie parent w plikach: parent.tpl, index.tpl; z treścią: SECTION 'parent': nazwa_widoku.tpl
+- Wywołanie tagiem @parent dla sekcji parent przed treścią sekcji pliku index.tpl - wywołuje treść tej samej sekcji z rodzica w klasie podrzędnej
+- Pozostawienie treści bez sekcji w plikach: index.tpl oraz parent.tpl
+- Pokazanie treści sekcji parent w pliku base.tpl
+- Pokazanie treści sekcji special w pliku base.tpl
+
+RESULT:
+- Wyrenderowanie pliku index.tpl w rodzicu private.tpl, a ich w rodzicy base.tpl
+- W sekcji special, powinien pojawić się napis: SECTION 'special': index.tpl
+- W sekcji parent, powinien pojawić się napis: SECTION 'parent': parent.tpl a pod nim SECTION 'parent': index.tpl
+- W pozostawionej treści widoków powinien pojawić się napis: SECTION 'content': index.tpl
+
+
+------------------------------------------------------------------
+BS - Plik bootstrap, w którym konfigurujemy Atline.
+------------------------------------------------------------------

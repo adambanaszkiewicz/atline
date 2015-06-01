@@ -1,0 +1,22 @@
+# MODE7
+
+
+START:
+- Render widoku (index.tpl)
+- Wywołanie @include i załączenie innego widoku (view.tpl)
+- Z podaniem domyślnego widoku dziedziczonego w BS
+- Bez podania tagu @extends w pliku index.tpl
+- Z podaniem @no-extends w pliku view.tpl
+
+RESULT:
+- Wyrenderowanie pliku index.tpl w rodzicu base.tpl
+- W podanym miejscu wyrenderowanie pliku view.tpl bez rodzica base.tpl
+
+SCENARIO:
+- Po wyrenderowaniu trzech widoków usuń tag @no-extends z pliku view.tpl - rezultatem powinno być wyrenderowanie podwójne pliku base.tpl.
+
+
+
+------------------------------------------------------------------
+BS - Plik bootstrap, w którym konfigurujemy Atline.
+------------------------------------------------------------------

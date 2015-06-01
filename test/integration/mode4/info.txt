@@ -1,0 +1,20 @@
+# MODE4
+
+
+START:
+- Render widoku (index.tpl)
+- Pętla foreach po array
+- Pętla for z 10 iteracjami
+- Pętla while z 10 iteracjami (warunek: $i < 10)
+
+RESULT:
+- Wyrenderowanie pliku index.tpl
+- Wykonanie pętli foreach i wylistowanie indeksów i wartości tablicy
+- Wykonanie pętli for i wylistowanie 10 iteracji
+- Wykonanie pętli while i wylistowanie 10 iteracji
+
+
+
+------------------------------------------------------------------
+BS - Plik bootstrap, w którym konfigurujemy Atline.
+------------------------------------------------------------------

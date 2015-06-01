@@ -1,0 +1,17 @@
+# MODE3
+
+
+START:
+- Render widoku (index.tpl)
+- Z podaniem rodzica w BS (base1.tpl)
+- Z podaniem tagu @no-extends
+
+RESULT:
+- Wyrenderowanie pliku index.tpl
+- Nie wyrenderowanie pliku base1.tpl
+
+
+
+------------------------------------------------------------------
+BS - Plik bootstrap, w którym konfigurujemy Atline.
+------------------------------------------------------------------

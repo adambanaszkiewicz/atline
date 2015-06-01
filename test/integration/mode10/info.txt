@@ -1,0 +1,19 @@
+# MODE9
+
+
+START:
+- Render widoku (index.tpl)
+- Ustawienie głównego widoku w BS o nazwie base.tpl
+- Wysłanie treści domyślnej do widoku.
+- Wysłanie treści bezpośrednio do danego widoku.
+
+
+RESULT:
+- Wyrenderowanie pliku index.tpl w rodzicu base.tpl
+- var_dump z treścią tablicy danych domyślnych (global data)
+- var_dump z treścią tablicy danych widoku (view data)
+
+
+------------------------------------------------------------------
+BS - Plik bootstrap, w którym konfigurujemy Atline.
+------------------------------------------------------------------
