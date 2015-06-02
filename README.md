@@ -1,29 +1,31 @@
-# atline
-Atline - PHP Template System. Combination of Template System Syntax and PHP syntax. You can use clean PHP in Your templates without hacking Template System.
+# Atline
+Atline - PHP Template System. Created for using Templating syntax for speed, and PHP syntax for facilities.
+
+Syntax is similar to Twig, Smarty and Django - little from each one.
 
 ## Examples
 
-### Auto-escape
+### Echo with Auto-escape
 ~~~php
-{{ $data }}                              // Atline syntax
-<?=htmlspecialchars($data)?>             // PHP 5.4 syntax
-<?php echo htmlspecialchars($data); ?>   // PHP 5.3 syntax
+{{ var }}
 ~~~
 
 ### Foreach loop
 ~~~php
 @foreach $array
-    {{ $key }} => {{ $val }}
+    {{ $key }} => {{ item }}
 @endforeach
-
-<?php foreach($array as $key => $val): ?>
-    <?=$key?> => <?=$val?>
-<?php endforeach; ?>
 ~~~
 
-### Internal method call (here: translation function)
+### Filters
 ~~~php
-{{ t('translateIndex') }}                 // Atline syntax
-<?=$app->t('translateIndex')?>            // PHP 5.4 syntax
-<?php echo $app->t('translateIndex'); ?>  // PHP 5.3 syntax
+{{ $var|upper }}
 ~~~
+
+### External method call
+~~~php
+{{ t('translateIndex') }}
+~~~
+
+### License
+This code is licensed under MIT License.
