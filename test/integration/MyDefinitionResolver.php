@@ -18,14 +18,14 @@ use Atline\DefinitionResolver;
  */
 class MyDefinitionResolver extends DefinitionResolver
 {
-  /**
-   * Translate $definition into path to view file.
-   * 
-   * @param  mixed $definition Definition to parse.
-   * @return Filepath.
-   */
-  public function resolve($definition)
-  {
-    return "view/{$definition}.tpl";
-  }
+    /**
+     * Translate $definition into path to view file.
+     * 
+     * @param  mixed $definition Definition to parse.
+     * @return Filepath.
+     */
+    public function resolve($definition)
+    {
+        return "view/{$definition}.tpl";
+    }
 }

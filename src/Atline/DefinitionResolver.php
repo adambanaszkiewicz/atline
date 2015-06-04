@@ -15,19 +15,19 @@ namespace Atline;
 
 /**
  * @author    Adam Banaszkiewicz https://github.com/requtize
- * @version   0.0.1
- * @date      2015.06.01
+ * @version   0.0.2
+ * @date      2015.06.04
  */
 class DefinitionResolver implements DefinitionResolverInterface
 {
-  /**
-   * Translate $definition into path to view file.
-   * 
-   * @param  mixed $definition Definition to parse.
-   * @return Filepath.
-   */
-  public function resolve($definition)
-  {
-    return "../view/{$definition}.tpl";
-  }
+    /**
+     * Translate $definition into path to view file.
+     * 
+     * @param  mixed $definition Definition to parse.
+     * @return Filepath.
+     */
+    public function resolve($definition)
+    {
+        return "../../../views/{$definition}.tpl";
+    }
 }
