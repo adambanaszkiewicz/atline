@@ -18,8 +18,8 @@ use Atline\Environment;
  */
 class MyEnvironment extends Environment
 {
-  public function t($input)
-  {
-    return "Call function <b>Environment->t('{$input}')</b>";
-  }
+    public function t($input)
+    {
+        return "Call function <b>Environment->t('{$input}')</b>";
+    }
 }

@@ -16,73 +16,77 @@ namespace Atline;
 /**
  * @author    Adam Banaszkiewicz https://github.com/requtize
  * @version   0.0.1
- * @date      2015.06.01
+ * @date      2015.06.04
  */
 class Environment
 {
-  /**
-   * @var Atline\Engine
-   */
-  protected $engine;
+    /**
+     * @var Atline\Engine
+     */
+    protected $engine;
 
-  /**
-   * Sets Engine object, to allow rendering other view in current.
-   * 
-   * @param Engine $engine
-   * @return self
-   */
-  public function setEngine(Engine $engine)
-  {
-    $this->engine = $engine;
-
-    return $this;
-  }
-
-  /**
-   * Allowed filters:
-   *   - safe      - Removes HTML tags and replace chars by entities: < > " '
-   *   - stags     - Removes only HTML tags.
-   *   - upper     - Uppercase text.
-   *   - lower     - Lowercase text.
-   *   - ucf       - Uppercase first letter in string.
-   *
-   * @param  string $filter Filter name/
-   * @param  mixed  $input  Value to filtering.
-   * @return mixed  Filtered value.
-   */
-  public function filter($filter, $input)
-  {
-    switch($filter)
+    /**
+     * Sets Engine object, to allow rendering other view in current.
+     * 
+     * @param Engine $engine
+     * @return self
+     */
+    public function setEngine(Engine $engine)
     {
-      case 'stags': $input = strip_tags($input); break;
-      case 'upper': $input = mb_strtoupper($input); break;
-      case 'lower': $input = mb_strtolower($input); break;
-      case 'ucf':   $input = $this->mb_ucfirst($input);    break;
-      case 'raw':   null; break;
-      // Equivalent to = safe
-      default: $input = htmlspecialchars(strip_tags($input), ENT_QUOTES);
+        $this->engine = $engine;
+
+        return $this;
     }
 
-    return $input;
-  }
+    /**
+     * Allowed filters:
+     *   - safe      - Removes HTML tags and replace chars by entities: < > " '
+     *   - stags     - Removes only HTML tags.
+     *   - upper     - Uppercase text.
+     *   - lower     - Lowercase text.
+     *   - ucf       - Uppercase first letter in string.
+     *
+     * @param  string $filter Filter name/
+     * @param  mixed  $input  Value to filtering.
+     * @return mixed  Filtered value.
+     */
+    public function filter($filter, $input)
+    {
+        switch($filter)
+        {
+            case 'stags': $input = strip_tags($input); break;
+            case 'upper': $input = mb_strtoupper($input); break;
+            case 'lower': $input = mb_strtolower($input); break;
+            case 'ucf':   $input = $this->fequiv_mb_ucfirst($input); break;
+            case 'raw':   null; break;
+            // Equivalent to = safe
+            default: $input = htmlspecialchars(strip_tags($input), ENT_QUOTES);
+        }
 
-  /**
-   * Render view.
-   *
-   * @param  string $definition View definition.
-   * @param  array  $data       Array of Data to pass into rendered view.
-   * @return string             Rendered View.
-   */
-  public function render($definition, array $data = [])
-  {
-    return $this->engine->render($definition, $data);
-  }
+        return $input;
+    }
 
-  protected function mb_ucfirst($string, $encoding = 'utf8')
-  {
-    $strlen     = mb_strlen($string, $encoding);
-    $firstChar  = mb_substr($string, 0, 1, $encoding);
-    $then       = mb_substr($string, 1, $strlen - 1, $encoding);
-    return mb_strtoupper($firstChar, $encoding) . $then;
-  }
+    /**
+     * Render view.
+     *
+     * @param  string $definition View definition.
+     * @param  array  $data       Array of Data to pass into rendered view.
+     * @return string             Rendered View.
+     */
+    public function render($definition, array $data = [])
+    {
+        return $this->engine->render($definition, $data);
+    }
+
+    /**
+     * Equivalent function to ucfirst with mbstring usage.
+     *
+     * @param  string $string   Input string.
+     * @param  string $encoding Encoding.
+     * @return Transformed output string.
+     */
+    protected function fequiv_mb_ucfirst($string, $encoding = 'utf8')
+    {
+        return mb_strtoupper(mb_substr($string, 0, 1, $encoding), $encoding).mb_substr($string, 1, mb_strlen($string, $encoding) - 1, $encoding);
+    }
 }

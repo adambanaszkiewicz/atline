@@ -16,15 +16,15 @@ namespace Atline;
 /**
  * @author    Adam Banaszkiewicz https://github.com/requtize
  * @version   0.0.1
- * @date      2015.06.01
+ * @date      2015.06.04
  */
 interface DefinitionResolverInterface
 {
-  /**
-   * Translate $definition into path to view file.
-   * 
-   * @param  mixed $definition Definition to parse.
-   * @return Filepath.
-   */
-  public function resolve($definition);
+    /**
+     * Translate $definition into path to view file.
+     * 
+     * @param  mixed $definition Definition to parse.
+     * @return Filepath.
+     */
+    public function resolve($definition);
 }

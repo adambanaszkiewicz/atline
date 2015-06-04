@@ -16,7 +16,7 @@ namespace Atline;
 /**
  * @author    Adam Banaszkiewicz https://github.com/requtize
  * @version   0.0.1
- * @date      2015.06.01
+ * @date      2015.06.04
  */
 class View
 {
@@ -65,7 +65,7 @@ class View
    */
   public function section($name)
   {
-    if(! isset($this->sections[$name]))
+    if(isset($this->sections[$name]) === false)
     {
       return false;
     }
