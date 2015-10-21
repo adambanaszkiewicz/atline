@@ -1,9 +1,6 @@
 # Atline
 Atline - PHP Template System. Created for using Templating syntax for (writing) speed, and PHP syntax for facilities.
 
-## Documentation
-See documentation: http://atline-engine.com/
-
 ## Advantages
 - Usage PHP code
 - Views extending
@@ -15,7 +12,7 @@ See documentation: http://atline-engine.com/
 
 ### Echo with Auto-escape
 ~~~php
-{{ var }}
+{{ $var }}
 ~~~
 
 ### Conditions
@@ -37,7 +34,7 @@ See documentation: http://atline-engine.com/
 ### Foreach loop
 ~~~php
 @foreach $array
-    {{ $key }} => {{ item }}
+    {{ $key }} => {{ $item }}
 @endforeach
 ~~~
 

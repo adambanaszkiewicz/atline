@@ -11,12 +11,12 @@
  * @link      https://github.com/requtize/atline
  */
 
-namespace Atline;
+namespace Atline\Atline;
 
 /**
  * @author    Adam Banaszkiewicz https://github.com/requtize
- * @version   0.0.2
- * @date      2015.06.04
+ * @version   0.1.0
+ * @date      2015.10.21
  */
 class DefinitionResolver implements DefinitionResolverInterface
 {

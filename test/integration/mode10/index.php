@@ -3,8 +3,8 @@
 include '../load.php';
 include 'MyEnvironment.php';
 
-use Atline\Engine;
-use Atline\Environment;
+use Atline\Atline\Engine;
+use Atline\Atline\Environment;
 
 $engine = new Engine(__DIR__.'/runtime/Cache', new MyEnvironment());
 $engine->setCached(false);

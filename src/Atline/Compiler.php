@@ -11,14 +11,14 @@
  * @link      https://github.com/requtize/atline
  */
 
-namespace Atline;
+namespace Atline\Atline;
 
 /**
  * Main class for compilation views into PHP Class.
  *
  * @author    Adam Banaszkiewicz https://github.com/requtize
- * @version   0.0.2
- * @date      2015.06.04
+ * @version   0.1.0
+ * @date      2015.10.21
  */
 class Compiler
 {
@@ -338,11 +338,20 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
      */
     public function compileRenders()
     {
-        preg_match_all('/@render\(\'([a-zA-Z0-9\.\-]+)\'\)/', $this->prepared, $matches);
+        preg_match_all('/@render\(\'([a-zA-Z0-9\.\-]+)\'(.*)?\)/', $this->prepared, $matches);
 
         if(isset($matches[1][0]))
         {
-            $this->prepared = trim(str_replace($matches[0][0], "<?= \$env->render('{$matches[1][0]}', \$this->allData()); ?>", $this->prepared));
+            if($matches[2][0])
+            {
+                $matches[2][0] = trim($matches[2][0], ' ,');
+
+                $this->prepared = trim(str_replace($matches[0][0], "<?= \$env->render('{$matches[1][0]}', array_merge(\$this->allData(), {$matches[2][0]})); ?>", $this->prepared));
+            }
+            else
+            {
+                $this->prepared = trim(str_replace($matches[0][0], "<?= \$env->render('{$matches[1][0]}', \$this->allData()); ?>", $this->prepared));
+            }
         }
     }
 
@@ -514,9 +523,16 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
             if(strpos($varName, '$') !== 0)
             {
                 $varName = "\$env->$varName";
+                $isFunctionCall = true;
+            }
+            else
+            {
+                $isFunctionCall = false;
             }
 
-            if(in_array('raw', $exploded) == false)
+            // We add 'safe' filter only for variables.
+            // If function call have to be save echoed, user have to add this filter manually.
+            if($isFunctionCall === false && in_array('raw', $exploded) == false)
             {
                 $exploded[] = 'safe';
             }
