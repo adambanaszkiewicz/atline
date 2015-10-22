@@ -226,7 +226,7 @@ class Compiler
         {
             $header = '<?php
 
-use Atline\View;
+use Atline\Atline\View;
 
 /**
  * View filepath: '.$this->filepath.'
@@ -239,7 +239,7 @@ class '.$this->getClassName().' extends View';
 
 require_once "'.$this->extendsClassname.'.php";
 
-use Atline\View;
+use Atline\Atline\View;
 
 /**
  * View filepath: '.$this->filepath.'
