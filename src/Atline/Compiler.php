@@ -17,8 +17,8 @@ namespace Atline\Atline;
  * Main class for compilation views into PHP Class.
  *
  * @author    Adam Banaszkiewicz https://github.com/requtize
- * @version   0.1.0
- * @date      2015.10.21
+ * @version   0.1.1
+ * @date      2015.10.22
  */
 class Compiler
 {
