@@ -17,6 +17,12 @@ var_dump($array);
 <hr />
 
 
+<h3>loop</h3>
+@loop $array
+    <div>{{ $key }} => {{ $item }}</div>
+@endloop
+<hr />
+
 <h3>for</h3>
 @for $i = 0; $i < 10; $i++
     <div>Iteracja: {{ $i }}</div>

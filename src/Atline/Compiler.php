@@ -17,8 +17,8 @@ namespace Atline\Atline;
  * Main class for compilation views into PHP Class.
  *
  * @author    Adam Banaszkiewicz https://github.com/requtize
- * @version   0.1.1
- * @date      2015.10.22
+ * @version   0.2.0
+ * @date      2015.11.14
  */
 class Compiler
 {
@@ -342,15 +342,18 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
 
         if(isset($matches[1][0]))
         {
-            if($matches[2][0])
+            foreach($matches[1] as $key => $val)
             {
-                $matches[2][0] = trim($matches[2][0], ' ,');
+                if($matches[2][$key])
+                {
+                    $matches[2][$key] = trim($matches[2][$key], ' ,');
 
-                $this->prepared = trim(str_replace($matches[0][0], "<?= \$env->render('{$matches[1][0]}', array_merge(\$this->allData(), {$matches[2][0]})); ?>", $this->prepared));
-            }
-            else
-            {
-                $this->prepared = trim(str_replace($matches[0][0], "<?= \$env->render('{$matches[1][0]}', \$this->allData()); ?>", $this->prepared));
+                    $this->prepared = trim(str_replace($matches[0][$key], "<?= \$env->render('{$matches[1][$key]}', array_merge(\$this->allData(), {$matches[2][$key]})); ?>", $this->prepared));
+                }
+                else
+                {
+                    $this->prepared = trim(str_replace($matches[0][$key], "<?= \$env->render('{$matches[1][$key]}', \$this->allData()); ?>", $this->prepared));
+                }
             }
         }
     }
@@ -522,7 +525,23 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
              */
             if(strpos($varName, '$') !== 0)
             {
-                $varName = "\$env->$varName";
+                /**
+                 * Explode for function name.
+                 */
+                $segments = explode('(', $varName);
+
+                if(count($segments) == 2)
+                {
+                    if(! function_exists($segments[0]))
+                    {
+                        $varName = "\$env->$varName";
+                    }
+                }
+                else
+                {
+                    $varName = "\$env->$varName";
+                }
+
                 $isFunctionCall = true;
             }
             else
@@ -617,6 +636,27 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
 
         // Endforeach
         $this->prepared = preg_replace('/@endforeach/', '<?php } ?>', $this->prepared);
+
+
+        // @loop as @foreach short-hand
+        preg_match_all('/@loop\s?(.*)/', $this->prepared, $matches);
+
+        foreach($matches[0] as $key => $val)
+        {
+            $def = trim($matches[1][$key]);
+
+            // Is definition has not got 'as' keyword, we add it automatically
+            if(strpos($def, ' as ') === false)
+            {
+                $def = "$def as \$key => \$item";
+            }
+
+            // Replace content
+            $this->prepared = str_replace($matches[0][$key], '<?php foreach('.$def.') { ?>', $this->prepared);
+        }
+
+        // Endloop
+        $this->prepared = preg_replace('/@endloop/', '<?php } ?>', $this->prepared);
 
 
 

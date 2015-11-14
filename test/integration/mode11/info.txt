@@ -1,0 +1,16 @@
+# MODE7
+
+
+START:
+- Render widoku (index.tpl) w rodzicu base.tpl
+- W każdym widoku są dwa komentarze Atline:
+    1. w wielu liniach
+    2. w jednej linii
+
+RESULT:
+- Wyrenderowanie widoku index.tpl w rodzicu base.tpl, bez komentarzy.
+
+
+------------------------------------------------------------------
+BS - Plik bootstrap, w którym konfigurujemy Atline.
+------------------------------------------------------------------

@@ -11,7 +11,7 @@
  * @link      https://github.com/requtize/atline
  */
 
-use Atline\Environment;
+use Atline\Atline\Environment;
 
 /**
  * @author    Adam Banaszkiewicz https://github.com/requtize

@@ -38,9 +38,14 @@ Atline - PHP Template System. Created for using Templating syntax for (writing) 
 @endforeach
 ~~~
 
-### External method call
+### External method call (Environment extended class method)
 ~~~php
 {{ t('translateIndex') }}
+~~~
+
+### PHP internal function call
+~~~php
+{{ number_format($invoice->getCost(), 2) }}
 ~~~
 
 ## License

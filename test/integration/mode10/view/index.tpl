@@ -9,3 +9,6 @@
 
 <h3>Filter: raw</h3>
 {{ $data|raw }}
+
+<h3>Internal PHP's function</h3>
+{{ number_format(1.3345245, 2) }}

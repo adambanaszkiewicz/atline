@@ -15,8 +15,8 @@ namespace Atline\Atline;
 
 /**
  * @author    Adam Banaszkiewicz https://github.com/requtize
- * @version   0.1.1
- * @date      2015.10.22
+ * @version   0.2.0
+ * @date      2015.11.14
  */
 class View
 {

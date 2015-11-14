@@ -11,7 +11,7 @@
  * @link      https://github.com/requtize/atline
  */
 
-use Atline\DefinitionResolver;
+use Atline\Atline\DefinitionResolver;
 
 /**
  * @author    Adam Banaszkiewicz https://github.com/requtize

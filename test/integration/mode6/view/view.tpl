@@ -1,1 +1,0 @@
-<p>View: view.tpl</p>
