@@ -4,21 +4,19 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Copyright (c) 2015 by Adam Banaszkiewicz
+ * Copyright (c) 2015 - 2016 by Adam Banaszkiewicz
  *
  * @license   MIT License
- * @copyright Copyright (c) 2015, Adam Banaszkiewicz
+ * @copyright Copyright (c) 2015 - 2016, Adam Banaszkiewicz
  * @link      https://github.com/requtize/atline
  */
 
-namespace Atline\Atline;
+namespace Requtize\Atline;
 
 /**
  * Main class for compilation views into PHP Class.
  *
- * @author    Adam Banaszkiewicz https://github.com/requtize
- * @version   0.2.0
- * @date      2015.11.14
+ * @author Adam Banaszkiewicz https://github.com/requtize
  */
 class Compiler
 {
@@ -226,7 +224,7 @@ class Compiler
         {
             $header = '<?php
 
-use Atline\Atline\View;
+use Requtize\Atline\View;
 
 /**
  * View filepath: '.$this->filepath.'
@@ -239,7 +237,7 @@ class '.$this->getClassName().' extends View';
 
 require_once "'.$this->extendsClassname.'.php";
 
-use Atline\Atline\View;
+use Requtize\Atline\View;
 
 /**
  * View filepath: '.$this->filepath.'

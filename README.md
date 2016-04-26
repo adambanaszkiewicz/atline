@@ -3,7 +3,7 @@ Atline - PHP Template System. Created for using Templating syntax for (writing) 
 
 ## Advantages
 - Usage PHP code
-- Views extending
+- **Multidimentional Views extending**
 - Autoescape echoed data
 - Filters
 - Easy to implement
