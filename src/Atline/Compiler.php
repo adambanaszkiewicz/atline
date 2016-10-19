@@ -191,6 +191,11 @@ class Compiler
     {
         if($this->compiledExists() === false)
         {
+            if(is_file($this->filepath) === false)
+            {
+                throw new \Exception('File "'.$this->filepath.'" does not exists.');
+            }
+
             $this->raw      = file_get_contents($this->filepath);
             $this->prepared = $this->raw;
 
