@@ -58,6 +58,12 @@ class Environment
             case 'ucf':   $input = $this->fequiv_mb_ucfirst($input); break;
             case 'raw':   null; break;
             // Equivalent to = safe
+            /**
+             * Using htmlspecialchars() with htmlspecialchars_decode() prevents double
+             * filtering of entities. Script first replace entities that already exists
+             * in string into default characters, and then take all existed (with those
+             * replaced while ago) characters, replace them into entities.
+             */
             default: $input = htmlspecialchars(htmlspecialchars_decode(strip_tags($input), ENT_QUOTES), ENT_QUOTES);
         }
 
