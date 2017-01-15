@@ -58,7 +58,7 @@ class Environment
             case 'ucf':   $input = $this->fequiv_mb_ucfirst($input); break;
             case 'raw':   null; break;
             // Equivalent to = safe
-            default: $input = htmlspecialchars(strip_tags($input), ENT_QUOTES);
+            default: $input = htmlspecialchars(htmlspecialchars_decode(strip_tags($input), ENT_QUOTES), ENT_QUOTES);
         }
 
         return $input;
