@@ -22,6 +22,11 @@ class Environment
      * @var Atline\Engine
      */
     protected $engine;
+    
+    /**
+     * @var Atline\View
+     */
+    protected $view;
 
     /**
      * Sets Engine object, to allow rendering other view in current.
@@ -32,6 +37,19 @@ class Environment
     public function setEngine(Engine $engine)
     {
         $this->engine = $engine;
+
+        return $this;
+    }
+    
+    /**
+     * Sets View object.
+     * 
+     * @param View $view
+     * @return self
+     */
+    public function setView(View $view)
+    {
+        $this->view = $view;
 
         return $this;
     }
