@@ -230,6 +230,9 @@ class Engine
         $view->appendData($data);
         // Default data to pass.
         $view->appendData($this->defaultData);
+
+        $this->environment->setView($view);
+
         $view->main();
         $content = ob_get_contents();
         ob_end_clean();
