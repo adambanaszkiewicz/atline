@@ -30,7 +30,7 @@ class View
    * 
    * @var array
    */
-  protected $sections = [];
+  private $sections = [];
 
   /**
    * Return array of data for this view.
@@ -63,14 +63,31 @@ class View
    */
   public function section($name)
   {
-    if(isset($this->sections[$name]) === false)
+    $sections = $this->getSections();
+
+    if(isset($sections[$name]) === false)
     {
       return false;
     }
 
-    $name = $this->sections[$name];
+    $name = $sections[$name];
 
     $this->{$name}();
+  }
+
+  public function getSections()
+  {
+    return [];
+  }
+
+  public function getFilepath()
+  {
+    return null;
+  }
+
+  public function getParentFilepath()
+  {
+    return null;
   }
 
   /**
@@ -80,5 +97,6 @@ class View
    */
   public function main()
   {
+    
   }
 }

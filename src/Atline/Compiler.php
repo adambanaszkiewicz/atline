@@ -151,6 +151,11 @@ class Compiler
         return $this->extends;
     }
 
+    public function getFilepath()
+    {
+        return $this->filepath;
+    }
+
     /**
      * Check if compiled view already exists.
      * 
@@ -252,7 +257,22 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
 
         $content = $header.'
 {
-    protected $sections = [{SECTIONS_NAMES}];
+    private $sections = [{SECTIONS_NAMES}];
+
+    public function getSections()
+    {
+        return array_merge(parent::getSections(), $this->sections);
+    }
+
+    public function getFilepath()
+    {
+        return \''.$this->filepath.'\';
+    }
+
+    public function getParentFilepath()
+    {
+        return parent::getFilepath();
+    }
 
     {SECTIONS}
 }';
@@ -341,7 +361,7 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
      */
     public function compileRenders()
     {
-        preg_match_all('/@render\(\'([a-zA-Z0-9\.\-]+)\'(.*)?\)/', $this->prepared, $matches);
+        preg_match_all('/@render\(\'([^\(\\\')]+)\'(.*)?\)/', $this->prepared, $matches);
 
         if(isset($matches[1][0]))
         {

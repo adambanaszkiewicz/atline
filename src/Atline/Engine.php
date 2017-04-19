@@ -27,14 +27,6 @@ class Engine
     private $definitionResolver;
 
     /**
-     * Stores object of Environment. Object is responsible for additionally
-     * methods used in views. Default have methodsL render(), filter()
-     * 
-     * @var Atline\Environment
-     */
-    private $environment;
-
-    /**
      * Stores cache path for storing cached files.
      * 
      * @var string
@@ -62,11 +54,13 @@ class Engine
      */
     private $cached = true;
 
+    private $environmentFactory;
+
     /**
      * @param string      $cachePath Cache path.
      * @param Environment $env
      */
-    public function __construct($cachePath, Environment $env)
+    public function __construct($cachePath, Callable $env)
     {
         $this->cachePath    = $cachePath;
         $this->environment  = $env;
@@ -77,8 +71,16 @@ class Engine
             mkdir($this->cachePath, 0777, true);
         }
 
-        $this->environment->setEngine($this);
-        $this->defaultData = ['env' => $this->environment];
+        $this->environmentFactory = $env;
+    }
+
+    public function createEnv(View $view)
+    {
+        $env = call_user_func($this->environmentFactory);
+        $env->setEngine($this);
+        $env->setView($view);
+
+        return $env;
     }
 
     /**
@@ -127,7 +129,7 @@ class Engine
      */
     public function setDefaultData(array $data)
     {
-        $this->defaultData = array_merge($data, ['env' => $this->environment]);
+        $this->defaultData = $data;
 
         return $this;
     }
@@ -230,6 +232,9 @@ class Engine
         $view->appendData($data);
         // Default data to pass.
         $view->appendData($this->defaultData);
+        // Environment pass.
+        $view->appendData([ 'env' => $this->createEnv($view) ]);
+
         $view->main();
         $content = ob_get_contents();
         ob_end_clean();
