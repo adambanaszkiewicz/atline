@@ -83,13 +83,25 @@ class Compiler
     private $cached = true;
 
     /**
+     * Filters list which are user as 'raw' - without html encoding.
+     * 
+     * @var array
+     */
+    private $rawFilters = [
+        'raw'
+    ];
+
+    /**
      * @param string  $filepath Path to rendered view file.
      * @param boolean $cached   Compiled views should be cached?
      */
-    public function __construct($filepath, $cached = true)
+    public function __construct($filepath, $cached = true, array $options)
     {
         $this->filepath = $filepath;
         $this->cached   = $cached;
+
+        if(isset($options['raw-filters']) && is_array($options['raw-filters']))
+            $this->rawFilters = array_merge($this->rawFilters, $options['raw-filters']);
     }
 
     /**
@@ -572,9 +584,19 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
                 $isFunctionCall = false;
             }
 
+            $needToBeSafe = true;
+
+            foreach($this->rawFilters as $name)
+            {
+                if(in_array($name, $exploded))
+                {
+                    $needToBeSafe = false;
+                }
+            }
+
             // We add 'safe' filter only for variables.
             // If function call have to be save echoed, user have to add this filter manually.
-            if($isFunctionCall === false && in_array('raw', $exploded) == false)
+            if($isFunctionCall === false && $needToBeSafe)
             {
                 $exploded[] = 'safe';
             }

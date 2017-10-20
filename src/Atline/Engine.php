@@ -55,6 +55,7 @@ class Engine
     private $cached = true;
 
     private $environmentFactory;
+    private $compilatorOptions = [];
 
     /**
      * @param string      $cachePath Cache path.
@@ -81,6 +82,13 @@ class Engine
         $env->setView($view);
 
         return $env;
+    }
+
+    public function setCompilatorOptions(array $options)
+    {
+        $this->compilatorOptions = $options;
+
+        return $this;
     }
 
     /**
@@ -154,7 +162,7 @@ class Engine
      *
      * @return  string Rendered content of view.
      */
-    public function render($definition, array $data = [])
+    public function render($definition, array $data = [], array $compilatorOptions = [])
     {
         $className    = null;
         $compilers    = [];
@@ -164,7 +172,7 @@ class Engine
         do
         {
             $filepath = $this->definitionResolver->resolve($definition);
-            $compilers[$index] = new Compiler($filepath, $this->cached);
+            $compilers[$index] = new Compiler($filepath, $this->cached, array_merge($this->compilatorOptions, $compilatorOptions));
             $compilers[$index]->setCachePath($this->cachePath);
 
             /**
