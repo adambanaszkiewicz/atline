@@ -18,85 +18,112 @@ namespace Requtize\Atline;
  */
 class View
 {
-  /**
-   * Data to pass to view.
-   * 
-   * @var array
-   */
-  protected $data = [];
+    /**
+     * Data to pass to view.
+     * 
+     * @var array
+     */
+    protected $data = [];
 
-  /**
-   * Array of sections in class (child class).
-   * 
-   * @var array
-   */
-  private $sections = [];
+    /**
+     * Array of sections in class (child class).
+     * 
+     * @var array
+     */
+    private $sections = [];
 
-  /**
-   * Return array of data for this view.
-   * 
-   * @return array
-   */
-  public function allData()
-  {
-    return $this->data;
-  }
+    /**
+     * Array of rendered sections contents as cache.
+     * 
+     * @var array
+     */
+    private $sectionsRendered = [];
 
-  /**
-   * Append array of data to current data for this view.
-   * 
-   * @param  array  $data Array of data that should be appended.
-   * @return self
-   */
-  public function appendData(array $data)
-  {
-    $this->data = array_merge($this->data, $data);
-
-    return $this;
-  }
-
-  /**
-   * Calls section method.
-   * 
-   * @param  string $name Section name.
-   * @return void
-   */
-  public function section($name)
-  {
-    $sections = $this->getSections();
-
-    if(isset($sections[$name]) === false)
+    /**
+     * Return array of data for this view.
+     * 
+     * @return array
+     */
+    public function allData()
     {
-      return false;
+        return $this->data;
     }
 
-    $name = $sections[$name];
+    /**
+     * Append array of data to current data for this view.
+     * 
+     * @param  array  $data Array of data that should be appended.
+     * @return self
+     */
+    public function appendData(array $data)
+    {
+        $this->data = array_merge($this->data, $data);
 
-    $this->{$name}();
-  }
+        return $this;
+    }
 
-  public function getSections()
-  {
-    return [];
-  }
+    /**
+     * Calls section method.
+     * 
+     * @param  string $name Section name.
+     * @return void
+     */
+    public function section($name)
+    {
+        echo $this->getSection();
+    }
 
-  public function getFilepath()
-  {
-    return null;
-  }
+    /**
+     * Renders section and returns it content. Also save this content in cache.
+     * @param  string  $name         Section name.
+     * @param  boolean $forceRefresh Is this section need to be refreshed/rerendered?
+     * @return string
+     */
+    public function getSection($name, $forceRefresh = false)
+    {
+        if(isset($this->sectionsRendered[$name]) && $forceRefresh === false)
+        {
+            return $this->sectionsRendered[$name];
+        }
 
-  public function getParentFilepath()
-  {
-    return null;
-  }
+        $sections = $this->getSections();
 
-  /**
-   * Main method, called when render compiled View.
-   * 
-   * @return void
-   */
-  public function main()
-  {
-    
-  }
+        if(isset($sections[$name]) === false)
+        {
+            return false;
+        }
+
+        $name = $sections[$name];
+
+        ob_start();
+        $this->{$name}();
+        $content = ob_get_clean();
+
+        return $this->sectionsRendered[$name] = $content;
+    }
+
+    public function getSections()
+    {
+        return [];
+    }
+
+    public function getFilepath()
+    {
+        return null;
+    }
+
+    public function getParentFilepath()
+    {
+        return null;
+    }
+
+    /**
+     * Main method, called when render compiled View.
+     * 
+     * @return void
+     */
+    public function main()
+    {
+        
+    }
 }
