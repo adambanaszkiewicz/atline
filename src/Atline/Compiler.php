@@ -95,7 +95,7 @@ class Compiler
      * @param string  $filepath Path to rendered view file.
      * @param boolean $cached   Compiled views should be cached?
      */
-    public function __construct($filepath, $cached = true, array $options)
+    public function __construct($filepath, $cached = true, array $options = [])
     {
         $this->filepath = $filepath;
         $this->cached   = $cached;
@@ -229,6 +229,16 @@ class Compiler
         }
     }
 
+    public function getPreparedContent()
+    {
+        return $this->prepared;
+    }
+
+    public function generateViewClass()
+    {
+        return $this->__toString();
+    }
+
     /**
      * Generates class from compiled contents.
      * 
@@ -357,7 +367,7 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
 
         if(isset($matches[0][0]) && count($matches[0][0]) == 1)
         {
-            $this->extends  = false;
+            $this->extends  = null;
 
             $this->prepared = trim(str_replace($matches[0][0], '', $this->prepared));
         }
@@ -738,8 +748,8 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
         foreach($matches[0] as $key => $val)
         {
             $exploded = explode(' ', $matches[1][$key]);
-            $varName  = array_shift($exploded);
-            $value    = implode(' ', $exploded);
+            $varName  = trim(array_shift($exploded));
+            $value    = trim(implode(' ', $exploded));
 
             $this->prepared = str_replace($matches[0][$key], "<?php $varName = $value; \$this->appendData([$varName => $value]); ?>", $this->prepared);
         }
