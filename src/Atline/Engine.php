@@ -13,6 +13,9 @@
 
 namespace Requtize\Atline;
 
+use Requtize\Atline\Event\EventDispatcherInterface;
+use Requtize\Atline\Event\EventDispatcher;
+
 /**
  * @author Adam Banaszkiewicz https://github.com/requtize
  */
@@ -57,6 +60,8 @@ class Engine
     private $environmentFactory;
     private $compilatorOptions = [];
 
+    protected $eventDispatcher;
+
     /**
      * @param string      $cachePath Cache path.
      * @param Environment $env
@@ -73,6 +78,7 @@ class Engine
         }
 
         $this->environmentFactory = $env;
+        $this->setEventDispatcher(new EventDispatcher);
     }
 
     public function createEnv(View $view)
@@ -80,6 +86,8 @@ class Engine
         $env = call_user_func($this->environmentFactory);
         $env->setEngine($this);
         $env->setView($view);
+
+        $this->eventDispatcher->dispatch('createEnv', [ $env ]);
 
         return $env;
     }
@@ -89,6 +97,18 @@ class Engine
         $this->compilatorOptions = $options;
 
         return $this;
+    }
+
+    public function setEventDispatcher(EventDispatcherInterface $dispatcher)
+    {
+        $this->eventDispatcher = $dispatcher;
+
+        return $this;
+    }
+
+    public function getEventDispatcher()
+    {
+        return $this->eventDispatcher;
     }
 
     /**
@@ -168,10 +188,16 @@ class Engine
         $compilers    = [];
         $index        = 0;
         $defExtAdded  = false;
+        $definitionRoot = $definition;
+
+        $this->eventDispatcher->dispatch('render.compile.before', [ $definitionRoot ]);
 
         do
         {
             $filepath = $this->definitionResolver->resolve($definition);
+
+            $this->eventDispatcher->dispatch('render.compile_view.before', [ $definition, $filepath ]);
+
             $compilers[$index] = new Compiler($filepath, $this->cached, array_merge($this->compilatorOptions, $compilatorOptions));
             $compilers[$index]->setCachePath($this->cachePath);
 
@@ -214,9 +240,13 @@ class Engine
                 $defExtAdded = true;
             }
 
+            $this->eventDispatcher->dispatch('render.compile_view.after', [ $definition, $filepath ]);
+
             $index++;
         }
         while ($definition = $compilers[$index - 1]->getExtendedDefinition());
+
+        $this->eventDispatcher->dispatch('render.compile.after', [ $definitionRoot ]);
 
         /**
          * Save contents of PHP class into file if not exists yet.
