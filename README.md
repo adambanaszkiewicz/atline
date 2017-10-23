@@ -28,24 +28,28 @@ Atline - PHP Template System. Created for using Templating syntax for (writing) 
 
 ### Filters
 ~~~php
-{{ $var|upper }}
+{{ $var | upper }}
 ~~~
 
-### Foreach loop
+### Loops
 ~~~php
+@loop $array
+    {{ $key }} => {{ $item }}
+@endloop
+// Or
 @foreach $array
     {{ $key }} => {{ $item }}
 @endforeach
 ~~~
 
-### External method call (Environment extended class method)
-~~~php
-{{ t('translateIndex') }}
-~~~
-
 ### PHP internal function call
 ~~~php
 {{ number_format($invoice->getCost(), 2) }}
+~~~
+
+### External method call (Environment extended class method)
+~~~php
+{{ t('translateIndex') }}
 ~~~
 
 ## License
