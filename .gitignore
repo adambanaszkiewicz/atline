@@ -4,3 +4,5 @@ Thumbs.db
 ehthumbs.db
 error_log
 Desktop.ini
+test/unit/cache/
+test/integration/*/runtime/Cache/*
