@@ -2,7 +2,7 @@
 
 use Requtize\Atline\Compiler;
 
-class CompilerTest extends PHPUnit_Framework_TestCase
+class CompilerTest extends TestCase
 {
     /**
      * @dataProvider dataCompileProvider
