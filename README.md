@@ -36,7 +36,9 @@ Atline - PHP Template System. Created for using Templating syntax for (writing) 
 @loop $array
     {{ $key }} => {{ $item }}
 @endloop
+
 // Or
+
 @foreach $array
     {{ $key }} => {{ $item }}
 @endforeach
