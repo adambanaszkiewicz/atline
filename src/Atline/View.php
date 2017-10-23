@@ -70,7 +70,7 @@ class View
      */
     public function section($name)
     {
-        echo $this->getSection();
+        echo $this->getSection($name);
     }
 
     /**
