@@ -367,7 +367,7 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
 
         if(isset($matches[0][0]) && count($matches[0][0]) == 1)
         {
-            $this->extends  = null;
+            $this->extends  = false;
 
             $this->prepared = trim(str_replace($matches[0][0], '', $this->prepared));
         }

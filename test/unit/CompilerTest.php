@@ -179,7 +179,7 @@ ATLINE;
 
         $this->assertEquals($compiler->getExtendedDefinition(), 'predefinedDefinition');
         $compiler->compile();
-        $this->assertNull($compiler->getExtendedDefinition());
+        $this->assertFalse($compiler->getExtendedDefinition());
 
         unlink($file);
     }
