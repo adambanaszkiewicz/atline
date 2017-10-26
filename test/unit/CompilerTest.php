@@ -46,12 +46,16 @@ class CompilerTest extends TestCase
                 "<?= strtoupper(\$echo); ?>"
             ],
             [
-                '{{ environmentFunction($echo) }}',
-                "<?= \$env->environmentFunction(\$echo); ?>"
+                '{{ strtoupper(substr($echo, 0, 5)) }}',
+                "<?= strtoupper(substr(\$echo, 0, 5)); ?>"
             ],
             [
                 '{{ environmentFunction($echo) }}',
                 "<?= \$env->environmentFunction(\$echo); ?>"
+            ],
+            [
+                '{{ environmentFunction(substr($echo, 0, 5)) }}',
+                "<?= \$env->environmentFunction(substr(\$echo, 0, 5)); ?>"
             ],
             [
                 '{{ $echo | raw }}',

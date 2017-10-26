@@ -575,7 +575,7 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
                  */
                 $segments = explode('(', $varName);
 
-                if(count($segments) == 2)
+                if(count($segments) >= 2)
                 {
                     if(! function_exists($segments[0]))
                     {
