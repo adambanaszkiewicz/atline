@@ -748,10 +748,10 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
         foreach($matches[0] as $key => $val)
         {
             $exploded = explode(' ', $matches[1][$key]);
-            $varName  = trim(array_shift($exploded));
+            $varName  = substr(trim(array_shift($exploded)), 1);
             $value    = trim(implode(' ', $exploded));
 
-            $this->prepared = str_replace($matches[0][$key], "<?php $varName = $value; \$this->appendData([$varName => $varName]); ?>", $this->prepared);
+            $this->prepared = str_replace($matches[0][$key], "<?php $$varName = $value; \$this->appendData(['$varName' => $$varName]); ?>", $this->prepared);
         }
         
         /**
