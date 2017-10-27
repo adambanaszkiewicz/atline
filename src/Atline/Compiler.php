@@ -751,7 +751,7 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
             $varName  = trim(array_shift($exploded));
             $value    = trim(implode(' ', $exploded));
 
-            $this->prepared = str_replace($matches[0][$key], "<?php $varName = $value; \$this->appendData([$varName => $value]); ?>", $this->prepared);
+            $this->prepared = str_replace($matches[0][$key], "<?php $varName = $value; \$this->appendData([$varName => $varName]); ?>", $this->prepared);
         }
         
         /**
