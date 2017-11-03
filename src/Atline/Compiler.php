@@ -557,34 +557,57 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
 
         foreach($matches[0] as $key => $val)
         {
-            $exploded = explode('|', $matches[1][$key]);
+            $exploded = array_map(function($val) {
+                return trim($val);
+            }, explode('|', $matches[1][$key]));
 
-            array_walk($exploded, function(& $val) {
-                $val = trim($val);
-            });
+            $filters = [];
+            $code    = [];
 
-            $varName = trim(array_shift($exploded));
-            
+            /**
+             * When in code someone use the pipe operator, we need to fix this.
+             * Pipe operator is used to separate code from filters.
+             * {{ func('arg', '|') | filter }}
+             */
+            if(count($exploded) === 1)
+            {
+                $code = $exploded;
+            }
+            else
+            {
+                foreach($exploded as $chunk)
+                {
+                    $chunkFiltered = preg_replace('/[^a-z]+/', '', $chunk);
+
+                    if($chunkFiltered != $chunk)
+                        $code[] = $chunk;
+                    else
+                        $filters[] = $chunk;
+                }
+            }
+
+            $code = implode('|', $code);
+
             /**
              * Checks if is variable or method.
              */
-            if(strpos($varName, '$') !== 0)
+            if(strpos($code, '$') !== 0)
             {
                 /**
                  * Explode for function name.
                  */
-                $segments = explode('(', $varName);
+                $segments = explode('(', $code);
 
                 if(count($segments) >= 2)
                 {
                     if(! function_exists($segments[0]))
                     {
-                        $varName = "\$env->$varName";
+                        $code = "\$env->$code";
                     }
                 }
                 else
                 {
-                    $varName = "\$env->$varName";
+                    $code = "\$env->$code";
                 }
 
                 $isFunctionCall = true;
@@ -598,7 +621,7 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
 
             foreach($this->rawFilters as $name)
             {
-                if(in_array($name, $exploded))
+                if(in_array($name, $filters))
                 {
                     $needToBeSafe = false;
                 }
@@ -606,17 +629,17 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
 
             // We add 'safe' filter only for variables.
             // If function call have to be save echoed, user have to add this filter manually.
-            if($isFunctionCall === false && $needToBeSafe)
+            if($needToBeSafe)
             {
-                $exploded[] = 'safe';
+                $filters[] = 'safe';
             }
 
-            if(count($exploded))
+            if(count($filters))
             {
-                $varName = $this->createFiltersMethods($exploded, $varName);
+                $code = $this->createFiltersMethods($filters, $code);
             }
 
-            $this->prepared = str_replace($matches[0][$key], '<?= '.$varName.'; ?>', $this->prepared);
+            $this->prepared = str_replace($matches[0][$key], '<?= '.$code.'; ?>', $this->prepared);
         }
     }
 
@@ -749,7 +772,7 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
         {
             $exploded = explode(' ', $matches[1][$key]);
             $varName  = substr(trim(array_shift($exploded)), 1);
-            $value    = trim(implode(' ', $exploded));
+            $value    = trim(ltrim(trim(implode(' ', $exploded)), '='));
 
             $this->prepared = str_replace($matches[0][$key], "<?php $$varName = $value; \$this->appendData(['$varName' => $$varName]); ?>", $this->prepared);
         }

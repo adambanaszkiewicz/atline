@@ -43,19 +43,19 @@ class CompilerTest extends TestCase
             ],
             [
                 '{{ strtoupper($echo) }}',
-                "<?= strtoupper(\$echo); ?>"
+                "<?= \$env->filter('safe', strtoupper(\$echo)); ?>"
             ],
             [
                 '{{ strtoupper(substr($echo, 0, 5)) }}',
-                "<?= strtoupper(substr(\$echo, 0, 5)); ?>"
+                "<?= \$env->filter('safe', strtoupper(substr(\$echo, 0, 5))); ?>"
             ],
             [
                 '{{ environmentFunction($echo) }}',
-                "<?= \$env->environmentFunction(\$echo); ?>"
+                "<?= \$env->filter('safe', \$env->environmentFunction(\$echo)); ?>"
             ],
             [
                 '{{ environmentFunction(substr($echo, 0, 5)) }}',
-                "<?= \$env->environmentFunction(substr(\$echo, 0, 5)); ?>"
+                "<?= \$env->filter('safe', \$env->environmentFunction(substr(\$echo, 0, 5))); ?>"
             ],
             [
                 '{{ $echo | raw }}',
@@ -68,6 +68,22 @@ class CompilerTest extends TestCase
             [
                 '{{ $echo | lower | stags }}',
                 "<?= \$env->filter('lower', \$env->filter('stags', \$env->filter('safe', \$echo))); ?>"
+            ],
+            [
+                "{{ str_replace('|', '-', \$echo) }}",
+                "<?= \$env->filter('safe', str_replace('|', '-', \$echo)); ?>"
+            ],
+            [
+                "{{ str_replace('|', '-', \$echo) | lower }}",
+                "<?= \$env->filter('lower', \$env->filter('safe', str_replace('|', '-', \$echo))); ?>"
+            ],
+            [
+                "{{ substr(SOME_CONSTANT | Class::CONST) }}",
+                "<?= \$env->filter('safe', substr(SOME_CONSTANT|Class::CONST)); ?>"
+            ],
+            [
+                "{{ substr(SOME_CONSTANT | Class::CONST) | lower }}",
+                "<?= \$env->filter('lower', \$env->filter('safe', substr(SOME_CONSTANT|Class::CONST))); ?>"
             ],
             [
                 "@render('section-name')",
@@ -131,7 +147,19 @@ class CompilerTest extends TestCase
             ],
             [
                 "@set \$variable 10",
-                "<?php \$variable = 10; \$this->appendData([\$variable => 10]); ?>"
+                "<?php \$variable = 10; \$this->appendData(['variable' => \$variable]); ?>"
+            ],
+            [
+                "@set \$variable count([]) + 12",
+                "<?php \$variable = count([]) + 12; \$this->appendData(['variable' => \$variable]); ?>"
+            ],
+            [
+                "@set \$variable = 10",
+                "<?php \$variable = 10; \$this->appendData(['variable' => \$variable]); ?>"
+            ],
+            [
+                "@set \$variable = \$nextVar = 10",
+                "<?php \$variable = \$nextVar = 10; \$this->appendData(['variable' => \$variable]); ?>"
             ],
             [
                 "@parent",
