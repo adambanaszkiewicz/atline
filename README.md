@@ -1,22 +1,10 @@
 # Atline
 Atline - PHP Template System. Created for using Templating syntax for (writing) speed, and PHP syntax for facilities.
 
-## Installation
-
-### Via composer.json
+## Installation via composer.json
 
 ```json
-{
-    "require": {
-        "requtize/atline": "^1.0.0"
-    }
-}
-```
-
-### Via Composer CLI
-
-```cli
-composer require requtize/atline:^1.0.0
+"requtize/atline": "^1.0.0"
 ```
 
 ## Advantages
