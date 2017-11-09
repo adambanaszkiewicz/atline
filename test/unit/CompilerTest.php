@@ -11,7 +11,7 @@ class CompilerTest extends TestCase
     {
         $file = $this->createTemporaryViewFile($source);
 
-        $compiler = new Compiler($file, false);
+        $compiler = new Compiler($file, false, [ 'add-source-line-numbers' => false ]);
         $compiler->compile();
 
         $this->assertEquals($compiler->getPreparedContent(), $compiled);
@@ -181,14 +181,14 @@ Rest of view...
 ATLINE;
         $file = $this->createTemporaryViewFile($source);
 
-        $compiler = new Compiler($file, false);
+        $compiler = new Compiler($file, false, [ 'add-source-line-numbers' => false ]);
 
         $this->assertNull($compiler->getExtendedDefinition());
         $compiler->compile();
         $this->assertEquals($compiler->getExtendedDefinition(), 'parentViewName');
 
 
-        $compiler = new Compiler($file, false);
+        $compiler = new Compiler($file, false, [ 'add-source-line-numbers' => false ]);
         $compiler->setExtendedDefinition('predefinedDefinition');
 
         $this->assertEquals($compiler->getExtendedDefinition(), 'predefinedDefinition');
@@ -206,7 +206,7 @@ Rest of view...
 ATLINE;
         $file = $this->createTemporaryViewFile($source);
 
-        $compiler = new Compiler($file, false);
+        $compiler = new Compiler($file, false, [ 'add-source-line-numbers' => false ]);
         $compiler->setExtendedDefinition('predefinedDefinition');
 
         $this->assertEquals($compiler->getExtendedDefinition(), 'predefinedDefinition');
@@ -231,7 +231,7 @@ section2
 ATLINE;
         $file = $this->createTemporaryViewFile($source);
 
-        $compiler = new Compiler($file, false);
+        $compiler = new Compiler($file, false, [ 'add-source-line-numbers' => false ]);
         $this->assertEmpty($compiler->getSections());
 
         $compiler->compile($file);

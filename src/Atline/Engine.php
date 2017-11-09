@@ -259,25 +259,10 @@ class Engine
             }
         }
 
-        /**
-         * Clases haven't got namespaces so we must include these manualy.
-         */
-        include_once $this->cachePath."/{$className}.php";
-
-        ob_start();
-        $view = new $className;
-        // Data passed to view from called method.
-        $view->appendData($data);
         // Default data to pass.
-        $view->appendData($this->defaultData);
-        // Environment pass.
-        $view->appendData([ 'env' => $this->createEnv($view) ]);
+        $data = array_merge($data, $this->defaultData);
 
-        $view->main();
-        $content = ob_get_contents();
-        ob_end_clean();
-
-        return $content;
+        return (new Runner)->run($this->cachePath."/{$className}.php", $className, $data, [ $this, 'createEnv' ]);
     }
 
     /**
