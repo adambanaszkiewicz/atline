@@ -82,13 +82,11 @@ class Compiler
      */
     private $cached = true;
 
-    /**
-     * Filters list which are user as 'raw' - without html encoding.
-     * 
-     * @var array
-     */
-    private $rawFilters = [
-        'raw'
+    private $options = [];
+    private $defaultOptions = [
+        // Filters list which are user as 'raw' - without html encoding.
+        'raw-filters' => [ 'raw' ],
+        'add-source-line-numbers' => true
     ];
 
     /**
@@ -99,9 +97,10 @@ class Compiler
     {
         $this->filepath = $filepath;
         $this->cached   = $cached;
+        $this->options  = array_merge($this->defaultOptions, $options);
 
-        if(isset($options['raw-filters']) && is_array($options['raw-filters']))
-            $this->rawFilters = array_merge($this->rawFilters, $options['raw-filters']);
+        if(is_array($this->options['raw-filters']))
+            $this->options['raw-filters'] = array_merge([ 'raw' ], $this->options['raw-filters']);
     }
 
     /**
@@ -213,8 +212,12 @@ class Compiler
                 throw new \Exception('File "'.$this->filepath.'" does not exists.');
             }
 
-            $this->raw      = file_get_contents($this->filepath);
-            $this->prepared = $this->raw;
+            $this->raw = file_get_contents($this->filepath);
+
+            if($this->options['add-source-line-numbers'])
+                $this->prepared = $this->addLinesNumbers($this->raw);
+            else
+                $this->prepared = $this->raw;
 
             $this->removeComments();
             $this->resolveExtending();
@@ -227,6 +230,79 @@ class Compiler
             $this->findSections();
             $this->replaceSections();
         }
+    }
+
+    public function addLinesNumbers($content)
+    {
+        $sourceLines = preg_split('/\n|\r/i', $content);
+        $resultLines = [];
+
+        $addPhpTags = true;
+        $addLineNumber = true;
+
+        foreach($sourceLines as $no => $line)
+        {
+            if(strpos($line, '{{') !== false)
+                $hasAtlineEchoStartTag = true;
+            else
+                $hasAtlineEchoStartTag = false;
+
+            if(strpos($line, '}}') !== false)
+                $hasAtlineEchoEndTag = true;
+            else
+                $hasAtlineEchoEndTag = false;
+
+
+
+            if(strpos($line, '<?php') !== false)
+                $hasPhpStartTag = true;
+            else
+                $hasPhpStartTag = false;
+
+            if(strpos($line, '?>') !== false)
+                $hasPhpEndTag = true;
+            else
+                $hasPhpEndTag = false;
+
+
+
+            if($addLineNumber)
+            {
+                $newLine = '';
+
+                if($addPhpTags)
+                    $newLine .= '<?php ';
+
+                $newLine .= '// {src-line:'.($no + 1).'}';
+
+                if($addPhpTags)
+                    $newLine .= ' ?>';
+
+                $resultLines[] = $newLine;
+            }
+
+            $resultLines[] = $line;
+
+
+
+            if($hasPhpStartTag === true && $hasPhpEndTag === true)
+                null;
+            elseif($hasPhpStartTag === true)
+                $addPhpTags = false;
+            elseif($hasPhpEndTag === true)
+                $addPhpTags = true;
+
+
+
+            if($hasAtlineEchoStartTag === true && $hasAtlineEchoEndTag === true)
+                null;
+            elseif($hasAtlineEchoStartTag === true)
+                $addLineNumber = false;
+            elseif($hasAtlineEchoEndTag === true)
+                $addLineNumber = true;
+        }
+
+        return implode("\n", $resultLines);
     }
 
     public function getPreparedContent()
@@ -259,7 +335,9 @@ class Compiler
 use Requtize\Atline\View;
 
 /**
- * View filepath: '.$this->filepath.'
+ * __ATLINE_RENDER_METADATA__
+ * source-filepath: '.$this->filepath.'
+ * __ATLINE_RENDER_METADATA__
  */
 class '.$this->getClassName().' extends View';
         }
@@ -619,7 +697,7 @@ class '.$this->getClassName().' extends '.$this->extendsClassname.'';
 
             $needToBeSafe = true;
 
-            foreach($this->rawFilters as $name)
+            foreach($this->options['raw-filters'] as $name)
             {
                 if(in_array($name, $filters))
                 {
