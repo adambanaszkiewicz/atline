@@ -19,7 +19,7 @@ ATLINE;
         $engine->setDefinitionResolver(new SimpleDefinitionResolver);
 
         $eventsCalls = [
-            'createEnv' => 0,
+            'create-env' => 0,
             'render.compile.before' => 0,
             'render.compile_view.before' => 0,
             'render.compile_view.after' => 0,
@@ -28,8 +28,8 @@ ATLINE;
         ];
 
         $dispatcher = $engine->getEventDispatcher();
-        $dispatcher->addListener('createEnv', function () use (& $eventsCalls) {
-            $eventsCalls['createEnv']++;
+        $dispatcher->addListener('environment.create', function () use (& $eventsCalls) {
+            $eventsCalls['create-env']++;
         });
         $dispatcher->addListener('render.compile.before', function () use (& $eventsCalls) {
             $eventsCalls['render.compile.before']++;
@@ -46,7 +46,7 @@ ATLINE;
 
         $engine->render($file);
 
-        $this->assertEquals($eventsCalls['createEnv'], 1);
+        $this->assertEquals($eventsCalls['create-env'], 1);
         $this->assertEquals($eventsCalls['render.compile.before'], 1);
         $this->assertEquals($eventsCalls['render.compile_view.before'], 1);
         $this->assertEquals($eventsCalls['render.compile_view.after'], 1);

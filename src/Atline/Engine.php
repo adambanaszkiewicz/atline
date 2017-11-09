@@ -87,7 +87,7 @@ class Engine
         $env->setEngine($this);
         $env->setView($view);
 
-        $this->eventDispatcher->dispatch('createEnv', [ $env ]);
+        $this->eventDispatcher->dispatch('environment.create', [ $env ]);
 
         return $env;
     }
