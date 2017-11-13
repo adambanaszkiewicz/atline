@@ -13,6 +13,63 @@ class ViewParser
         $this->content  = file_get_contents($filepath);
     }
 
+    public function getFilepath()
+    {
+        return $this->filepath;
+    }
+
+    public function getClassname()
+    {
+        preg_match('/class\s([a-z0-9]+)/i', $this->content, $matches);
+
+        return isset($matches[1]) ? $matches[1] : null;
+    }
+
+    public function getParentClassFilepath()
+    {
+        preg_match('/extends\s([a-z0-9]+)/i', $this->content, $matches);
+
+        return isset($matches[1]) ? $matches[1] : null;
+    }
+
+    public function getParentClassParser()
+    {
+        $parent = $this->getParentClassFilepath();
+
+        if($parent && $parent != 'View')
+            return new self(dirname($this->filepath).'/'.$parent.'.php');
+        else
+            return null;
+    }
+
+    public function getClassnameHierarchy(array & $parents = [])
+    {
+        $parser = $this->getParentClassParser();
+
+        $parents[] = $this->getClassname();
+
+        if($parser)
+        {
+            $parser->getClassnameHierarchy($parents);
+        }
+
+        return $parents;
+    }
+
+    public function getFilenamesHierarchy(array & $parents = [])
+    {
+        $parser = $this->getParentClassParser();
+
+        $parents[] = realpath($this->getFilepath());
+
+        if($parser)
+        {
+            $parser->getFilenamesHierarchy($parents);
+        }
+
+        return $parents;
+    }
+
     public function getSourceFilepath()
     {
         preg_match('/__ATLINE_RENDER_METADATA__(.+?)__ATLINE_RENDER_METADATA__/ims', $this->content, $matches);
@@ -46,9 +103,9 @@ class ViewParser
         {
             if(($lineno + 1) == $commentLine)
             {
-                if(preg_match('/\{src\-line\:(\d)\}/i', $line, $matches) !== false)
+                if(preg_match('/\{src\-line\:(\d+)\}/i', $line, $matches) !== false)
                 {
-                    return $matches[1];
+                    return isset($matches[1]) ? $matches[1] : 'undefined';
                 }
             }
         }

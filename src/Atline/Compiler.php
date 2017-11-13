@@ -350,7 +350,9 @@ require_once "'.$this->extendsClassname.'.php";
 use Requtize\Atline\View;
 
 /**
- * View filepath: '.$this->filepath.'
+ * __ATLINE_RENDER_METADATA__
+ * source-filepath: '.$this->filepath.'
+ * __ATLINE_RENDER_METADATA__
  */
 class '.$this->getClassName().' extends '.$this->extendsClassname.'';
         }

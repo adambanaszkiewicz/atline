@@ -8,10 +8,11 @@ use Requtize\Atline\Exception\RenderException;
 class Runner
 {
     protected $bufferState = false;
+    protected $bufferLevel = 0;
 
     public function run($filepath, $className, array $data, callable $envFactory)
     {
-        $content = 'Something :)';
+        $content = '';
 
         try {
             set_error_handler([ $this, 'eventHandler' ]);
@@ -23,10 +24,7 @@ class Runner
             $view->appendData($data);
             $view->appendData([ 'env' => $envFactory($view) ]);
             $view->main();
-            $content = $this->bufferGet();
-            $this->bufferEnd();
-
-            restore_error_handler();
+            $content = $this->bufferGetEnd();
         }
         catch (\ParseError $e)
         {
@@ -53,8 +51,6 @@ class Runner
 
     public function eventHandler($errno, $errstr, $errfile, $errline, $errcontext)
     {
-        $this->bufferEnd();
-
         restore_error_handler();
 
         throw new \ErrorException($errstr, $errno, E_ERROR, $errfile, $errline);
@@ -62,12 +58,17 @@ class Runner
 
     protected function catchError($e, $filepath)
     {
-        if(in_array(realpath($e->getFile()), [ realpath($filepath), __FILE__ ], true))
-        {
-            $parser = new ViewParser($filepath);
-            $sourceFilepath = $parser->getSourceFilepath();
+        $this->bufferEnd();
+        
+        $files = (new ViewParser($filepath))->getFilenamesHierarchy();
+        $files[] = realpath($filepath);
+        $files[] = __FILE__;
 
-            throw new RenderException($e->getMessage().' - Error during render view '.$sourceFilepath.' on line '.$parser->getSourceLine($e->getLine()).'.', $e->getCode(), $e);
+        if(in_array(realpath($e->getFile()), $files, true))
+        {
+            $parser = new ViewParser($e->getFile());
+
+            throw new RenderException($e->getMessage().' - Error during render view '.$parser->getSourceFilepath().' on line '.$parser->getSourceLine($e->getLine()).'.', $e->getCode(), $e);
         }
         // Is this error is not from the rendered view, we throw it away.
         else
@@ -80,23 +81,52 @@ class Runner
     {
         if($this->bufferState === false)
         {
-            ob_start();
+            $this->bufferLevel = ob_get_level();
             $this->bufferState = true;
+            ob_start();
         }
 
         return $this;
     }
 
-    public function bufferGet()
+    public function bufferGetEnd()
     {
-        return ob_get_contents();
+        $content = [];
+
+        if($this->bufferState === true)
+        {
+            /**
+             * Close all opened buffers during render view
+             * until is level when we start rendering.
+             */
+            while($this->bufferLevel < ob_get_level())
+            {
+                $content[] = ob_get_contents();
+                ob_end_clean();
+            }
+
+            $this->bufferState = false;
+        }
+
+        /**
+         * When we have multiple Buffers turned on and we want to close them and get
+         * its contents, there will be closed in reversed order (like recurrency), so at
+         * the end we need to repair this ordering.
+         */
+        return implode(array_reverse($content));
     }
 
     public function bufferEnd()
     {
         if($this->bufferState === true)
         {
-            ob_end_clean();
+            /**
+             * Close all opened buffers during render view
+             * until is level when we start rendering.
+             */
+            while($this->bufferLevel < ob_get_level())
+                ob_end_clean();
+
             $this->bufferState = false;
         }
 
